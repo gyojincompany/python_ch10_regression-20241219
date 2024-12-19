@@ -1,4 +1,9 @@
 import pandas as pd
+from matplotlib.pyplot import imshow
+# pip install scikit-learn
+from sklearn.linear_model import LinearRegression  # 선형회귀모델
+from sklearn.model_selection import train_test_split  # 훈련셋, 평가셋 나누기
+from sklearn.metrics import mean_squared_error, r2_score  # MSE, R Squared
 
 data_df = pd.read_csv("data/auto-mpg.csv", header=0, engine="python")
 # print(data_df)
