@@ -15,6 +15,34 @@ data_df = data_df.drop(["horsepower", "origin", "car_name"], axis=1, inplace=Fal
 # 연비에 영향을 미치지 않는 3개의 열 삭제 후 재저장
 print(data_df.head(6))
 
+# 종속변수 Y,독립변수 X 로 분리
+Y = data_df["mpg"] # 종속변수
+X = data_df.drop(["mpg"], axis=1, inplace=False)  # 독립변수
 
+print(Y.head(6))
+print(X.head(6))
 
+# 훈련용 데이터셋과 평가용 데이터셋으로 분리
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
 
+# 선형회귀분석 모델 생성
+lr = LinearRegression()
+
+# X_train, Y_train -> 학습용 데이터
+lr.fit(X_train, Y_train)  # 모델 훈련
+
+# 평가셋(X_test)으로 예측 수행->Y_predict
+Y_predict = lr.predict(X_test)
+
+mse = mean_squared_error(Y_test, Y_predict)
+r2Score = r2_score(Y_test, Y_predict)
+
+print(f"MSE : {mse:.3f}")  # 소수 3자리까지 출력
+print(f"R^2 Score : {r2Score:.3f}")  # 소수 3자리까지만 출력
+
+intercept = lr.intercept_  # 절편 값
+coef = lr.coef_  # 회귀계수 5개(독립변수의 수)
+
+print(f"Y 절편 : {intercept:.3f}")
+print(f"회귀계수 : {coef}")
+print(f"회귀식 : {intercept:.3f}+{coef[0]:.3f}CYL+{coef[1]:.3f}DIS+{coef[2]:.3f}WEI+{coef[3]:.3f}ACC+{coef[4]:.3f}YEAR")
