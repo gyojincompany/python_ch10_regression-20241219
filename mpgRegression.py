@@ -4,6 +4,10 @@ from matplotlib.pyplot import imshow
 from sklearn.linear_model import LinearRegression  # 선형회귀모델
 from sklearn.model_selection import train_test_split  # 훈련셋, 평가셋 나누기
 from sklearn.metrics import mean_squared_error, r2_score  # MSE, R Squared
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
 
 data_df = pd.read_csv("data/auto-mpg.csv", header=0, engine="python")
 # print(data_df)
@@ -45,4 +49,21 @@ coef = lr.coef_  # 회귀계수 5개(독립변수의 수)
 
 print(f"Y 절편 : {intercept:.3f}")
 print(f"회귀계수 : {coef}")
-print(f"회귀식 : {intercept:.3f}+{coef[0]:.3f}CYL+{coef[1]:.3f}DIS+{coef[2]:.3f}WEI+{coef[3]:.3f}ACC+{coef[4]:.3f}YEAR")
+print(f"회귀식 : y = {intercept:.3f}+{coef[0]:.3f}CYL+{coef[1]:.3f}DIS+{coef[2]:.3f}WEI+{coef[3]:.3f}ACC+{coef[4]:.3f}YEAR")
+
+coef_series = pd.Series(data=coef, index=X.columns)
+print(coef_series)
+coef_series = coef_series.sort_values(ascending=False)  # 회귀계수의 내림차순으로 정렬
+print(coef_series)
+# 시각화
+fig, axs = plt.subplots(nrows=2, ncols=3, figsize=(16,16))  # 3행 2열 총 6개의 그래프 공간 확보
+
+x_features = ["model_year","accerleration","displacement","weight","cylinders"]
+plot_color =["r","g","b","y","r"]
+
+for i, feature in enumerate(x_features):
+    row = int(i/3)  # i=0 1 2 3 4 -> row=0 0 0 1 1
+    col = i%3  # i=0 1 2 3 4 -> col=0 1 2 0 1
+    sns.regplot(x=feature, y="mpg", data=data_df, ax=axs[row][col], color=plot_color[i])
+
+plt.show()
